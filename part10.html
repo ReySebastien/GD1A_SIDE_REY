@@ -52,7 +52,7 @@ function preload ()
     this.load.image('star', 'assets/babou.png');
     this.load.image('bomb', 'assets/pepe.png');
     this.load.image('lune', 'assets/sollunaire.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/spritesheet_perso_test.png', { frameWidth: 125, frameHeight: 167});
 }
 
 function create ()
@@ -65,7 +65,7 @@ function create ()
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    platforms.create(960, 450, 'lune');
+    platforms.create(960, 1000, 'ground').setScale(6).refreshBody();
 
     //  Now let's create some ledges
     platforms.create(1200, 400, 'ground');
