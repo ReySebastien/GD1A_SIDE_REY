@@ -49,7 +49,7 @@ var game = new Phaser.Game(config);
 function preload ()
 {
     this.load.image('sky', 'assets/fondespace.png');
-    this.load.image('ground', 'assets/platform.png');
+    this.load.image('ground', 'assets/bon_sol.png');
     this.load.image('star', 'assets/babou.png');
     this.load.image('bomb', 'assets/pepe.png');
     this.load.image('lune', 'assets/sollunaire.png');
@@ -68,15 +68,15 @@ function create ()
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    platforms.create(960, 1000, 'ground').setScale(6).refreshBody();
+    platforms.create(960, 918, 'ground').setScale(1).refreshBody();
 
     //  Now let's create some ledges
-    platforms.create(1200, 400, 'ground');
-    platforms.create(50, 250, 'ground');
-    platforms.create(1750, 220, 'ground');
+    //platforms.create(1200, 400, 'ground');
+    //platforms.create(50, 250, 'ground');
+    //platforms.create(1750, 220, 'ground');
 
     // The player and its settings ((100,450, 'dude') = position dans le jeu)
-    player = this.physics.add.sprite(100, 860, 'dude');
+    player = this.physics.add.sprite(100, 825, 'dude');
 
     //  Player physics properties. Give the little guy a slight bounce and a hitbox.
     player.setBounce(0);
@@ -126,7 +126,7 @@ function create ()
     alien = this.physics.add.group({
         key : 'alien',
         repeat: 0,
-        setXY: { x: 540, y: 870, stepX: 500 },
+        setXY: { x: 540, y: 835, stepX: 500 },
     });
     
     var alien1 = alien.create(1200, 350, 'alien');
