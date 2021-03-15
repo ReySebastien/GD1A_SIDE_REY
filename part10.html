@@ -43,6 +43,7 @@ var gameOver = false;
 var scoreText;
 var doubleSaut = false;
 var frame = true;
+var heal;
 
 var game = new Phaser.Game(config);
 
@@ -55,6 +56,7 @@ function preload ()
     this.load.image('lune', 'assets/sollunaire.png');
     this.load.image('alien', 'assets/alien.png');
     this.load.image('laser', 'assets/laser.png');
+    this.load.image('bouffe', 'assets/bouffe.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -68,6 +70,7 @@ function create ()
     this.add.image(960, 500, 'sky');
 
     this.add.image(1800, 100, 'barre_de_vie_3hp');
+    
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
 
@@ -137,6 +140,12 @@ function create ()
     
     var alien1 = alien.create(1200, 350, 'alien');
     
+    heal = this.physics.add.group({
+        key : 'bouffe',
+        repeat : 0,
+        setXY: {x: 1000, y: 780}
+    });
+    
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -145,10 +154,12 @@ function create ()
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(alien, platforms);
-
+    this.physics.add.collider(heal, platforms);
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
-
+    
+    this.physics.add.overlap(player, heal, collectHeal, null, this);
+    
     this.physics.add.collider(player, bombs, hitBomb, null, this);
     
     this.physics.add.collider(player, alien, hitAlien, null, this);
@@ -237,6 +248,16 @@ function collectStar (player, star)
 
     }
 }
+    
+function collectHeal (player, heal)
+{
+    heal.disableBody(true, true);
+
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+};
 
 function hitBomb (player, bombs)
 {
