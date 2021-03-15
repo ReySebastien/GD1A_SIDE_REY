@@ -44,6 +44,7 @@ var scoreText;
 var doubleSaut = false;
 var frame = true;
 var heal;
+var vie = 3;
 
 var game = new Phaser.Game(config);
 
@@ -57,6 +58,7 @@ function preload ()
     this.load.image('alien', 'assets/alien.png');
     this.load.image('laser', 'assets/laser.png');
     this.load.image('bouffe', 'assets/bouffe.png');
+    this.load.image('game_over', 'assets/game_over.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -68,8 +70,6 @@ function create ()
 {
     //  A simple background for our game
     this.add.image(960, 500, 'sky');
-
-    this.add.image(1800, 100, 'barre_de_vie_3hp');
     
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
@@ -217,6 +217,22 @@ function update ()
     if (cursors.down.isDown){
         player.setVelocityY(750)
     }
+    
+    if (vie == 3){
+        this.add.image(1800, 100, 'barre_de_vie_3hp');
+    }
+    
+    else if (vie == 2){
+        this.textures.remove('barre_de_vie_3hp');
+        this.add.image(1800, 100, 'barre_de_vie_2hp');
+    }
+    
+    else if (vie == 1){
+        this.textures.remove('barre_de_vie_2hp');
+        this.add.image(1800, 100, 'barre_de_vie_1hp');
+    }
+    
+
         
     
 }
@@ -253,9 +269,13 @@ function collectHeal (player, heal)
 {
     heal.disableBody(true, true);
 
-    //  Add and update the score
-    score += 10;
-    scoreText.setText('Score: ' + score);
+    //  changement de la vie
+    /* vie += 1;
+    
+    if(vie >= 4)
+    {
+        vie == 3;
+    }*/
 
 };
 
@@ -272,13 +292,21 @@ function hitBomb (player, bombs)
     
 function hitAlien (player, alien)
 {
-    this.physics.pause();
 
-    player.setTint(0xff0000);
+    vie -= 1;
 
     player.anims.play('turn');
+    
+    if(vie == 0){
+        this.textures.remove('barre_de_vie_1hp');
+        this.add.image(900, 500, 'game_over');
+        this.physics.pause();
+        
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+        gameOver = true;
+    }
 
-    gameOver = true;
 }
 </script>
 
