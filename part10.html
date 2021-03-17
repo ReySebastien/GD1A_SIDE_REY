@@ -16,8 +16,8 @@
 
 var config = {
     type: Phaser.AUTO,
-    width: 1920,
-    height: 1080,
+    width: 3200,
+    height: 1824,
     physics: {
         default: 'arcade',
         arcade: {
@@ -63,13 +63,14 @@ function preload ()
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
     this.load.spritesheet('dude', 'assets/spritesheet_perso_test.png', { frameWidth: 125, frameHeight: 167});
+    this.iter = 3.14;
 
 }
 
 function create ()
 {
     //  A simple background for our game
-    this.add.image(960, 500, 'sky');
+    this.add.image(1600, 912, 'sky');
     
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
@@ -164,6 +165,12 @@ function create ()
     
     this.physics.add.collider(player, alien, hitAlien, null, this);
     
+
+    this.cameras.main.setBounds(0, 0, 3200, 1824)
+    this.cameras.main.setSize(1920, 1080);
+
+    this.cameras.main.startFollow(player);
+
 }
 
 function update ()
@@ -232,7 +239,6 @@ function update ()
         this.add.image(1800, 100, 'barre_de_vie_1hp');
     }
     
-
         
     
 }
