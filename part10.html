@@ -229,16 +229,20 @@ function update ()
     }
     
     if (vie == 3){
-        hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
+       hp.setTexture("barre_de_vie_3hp");
+        
     }
     else if (vie == 2){
-        //this.texture.remove("barre_de_vie_3hp");
-        hp = this.add.image(1800,100, "barre_de_vie_2hp").setScrollFactor(0);
+        hp.setTexture("barre_de_vie_2hp" );
+        
     }
     
     else if (vie == 1){
-        //this.texture.remove("barre_de_vie_2hp");
-        hp = this.add.image(1800,100, "barre_de_vie_1hp").setScrollFactor(0);
+        hp.setTexture("barre_de_vie_1hp");
+    }
+    
+    else if (vie == 0){
+        this.add.image(960, 540, 'game_over').setScrollFactor(0);
     }
     
         
@@ -279,19 +283,18 @@ function collectHeal (player, heal)
 
     //  changement de la vie
     
-    /* vie += 1;
+    vie += 1;
     
     if(vie >= 4)
     {
         vie == 3;
-    }*/
+    }
 
 };
 
 function hitBomb (player, bombs)
 {
     this.physics.pause();
-
     player.setTint(0xff0000);
 
     player.anims.play('turn');
@@ -316,12 +319,10 @@ function hitAlien (player, alien)
     player.anims.play('turn');
     
     if(vie == 0){
-        this.textures.remove('barre_de_vie_1hp');
-        this.add.image(960, 540, 'game_over').setScollFactor(0);
-        this.physics.pause();
-        
+        this.add.image(960, 540, 'game_over').setScrollFactor(0);
         player.setTint(0xff0000);
         player.anims.play('turn');
+        this.physics.pause();
         gameOver = true;
     }
 
