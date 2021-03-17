@@ -45,6 +45,7 @@ var doubleSaut = false;
 var frame = true;
 var heal;
 var vie = 3;
+var invulnerabilite = false;
 
 var game = new Phaser.Game(config);
 
@@ -163,13 +164,15 @@ function create ()
     
     this.physics.add.collider(player, bombs, hitBomb, null, this);
     
-    this.physics.add.collider(player, alien, hitAlien, null, this);
+    this.physics.add.overlap(player, alien, hitAlien, null, this);
     
 
     this.cameras.main.setBounds(0, 0, 3200, 1824)
     this.cameras.main.setSize(1920, 1080);
 
     this.cameras.main.startFollow(player);
+    
+    hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
 
 }
 
@@ -226,17 +229,16 @@ function update ()
     }
     
     if (vie == 3){
-        this.add.image(1800, 100, 'barre_de_vie_3hp');
+        hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
     }
-    
     else if (vie == 2){
-        this.textures.remove('barre_de_vie_3hp');
-        this.add.image(1800, 100, 'barre_de_vie_2hp');
+        //this.texture.remove("barre_de_vie_3hp");
+        hp = this.add.image(1800,100, "barre_de_vie_2hp").setScrollFactor(0);
     }
     
     else if (vie == 1){
-        this.textures.remove('barre_de_vie_2hp');
-        this.add.image(1800, 100, 'barre_de_vie_1hp');
+        //this.texture.remove("barre_de_vie_2hp");
+        hp = this.add.image(1800,100, "barre_de_vie_1hp").setScrollFactor(0);
     }
     
         
@@ -299,14 +301,23 @@ function hitBomb (player, bombs)
     
 function hitAlien (player, alien)
 {
-
-    vie -= 1;
+    if (!invulnerabilite){
+         vie -= 1;
+        invulnerabilite = true;
+        
+        if(vie > 0){
+            clignotement = this.time.addEvent({ delay : 200, repeat: 9, callback: function(){player.visible = !player.visible;}, callbackScope: this});
+        }
+        
+        tempsInvulnerabilite = this.time.addEvent({ delay : 2000, callback: function(){invulnerabilite = false}, callbackScope: this});
+    }
+   
 
     player.anims.play('turn');
     
     if(vie == 0){
         this.textures.remove('barre_de_vie_1hp');
-        this.add.image(900, 500, 'game_over');
+        this.add.image(960, 540, 'game_over').setScollFactor(0);
         this.physics.pause();
         
         player.setTint(0xff0000);
