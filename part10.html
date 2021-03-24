@@ -46,6 +46,9 @@ var doubleSaut = false;
 var frame = true;
 var heal;
 var reacteur;
+var avant_vaisseau;
+var milieu_vaisseau;
+var queue_vaisseau;    
 var vie = 3;
 var invulnerabilite = false;
 
@@ -68,6 +71,9 @@ function preload ()
     this.load.image('petite_plateforme', 'assets/petite_plateforme.png');
     this.load.image('reacteur', 'assets/reacteur.png');
     this.load.image('petit_reacteur', 'assets/petit_reacteur.png');
+    this.load.image('avant_vaisseau', 'assets/avant_vaisseau.png');
+    this.load.image('milieu_vaisseau', 'assets/milieu_vaisseau.png');
+    this.load.image('queue_vaisseau', 'assets/queue_vaisseau.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -172,6 +178,14 @@ function create ()
         repeat : 0,
         setXY: {x: 300, y: 2850}
     });
+    
+    avant_vaisseau = this.physics.add.group({
+        key : 'avant_vaisseau',
+        repeat : 0,
+        setXY: {x: 100, y: 50}
+    });
+    
+    
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -182,6 +196,8 @@ function create ()
     this.physics.add.collider(alien, platforms);
     this.physics.add.collider(heal, platforms);
     this.physics.add.collider(reacteur, platforms);
+    this.physics.add.collider(avant_vaisseau, platforms);
+    
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
     
@@ -192,6 +208,8 @@ function create ()
     this.physics.add.overlap(player, alien, hitAlien, null, this);
     
     this.physics.add.overlap(player, reacteur, collectReacteur, null, this);
+    
+    this.physics.add.overlap(player, avant_vaisseau, collectAvantVaisseau, null, this);
     
     this.cameras.main.setBounds(0, 0, 5760, 3283)
     this.cameras.main.setSize(1920, 1080);
@@ -328,6 +346,12 @@ function collectReacteur(player, reacteur){
     reacteur.disableBody(true, true);
     
     this.add.image(60, 50, 'petit_reacteur').setScrollFactor(0);
+}
+    
+function collectAvantVaisseau(player, avant_vaisseau){
+    avant_vaisseau.disableBody(true, true);
+    
+    this.add.image(1000, 50, 'avant_vaisseau').setScrollFactor(0);
 }
     
 function collectHeal (player, heal)
