@@ -40,10 +40,12 @@ var platforms;
 var cursors;
 var score = 0;
 var gameOver = false;
+var victoire = false;
 var scoreText;
 var doubleSaut = false;
 var frame = true;
 var heal;
+var reacteur;
 var vie = 3;
 var invulnerabilite = false;
 
@@ -64,6 +66,8 @@ function preload ()
     this.load.image('plateforme_normale', 'assets/plateforme_normale.png');
     this.load.image('toute_petite_plateforme', 'assets/toute_petite_plateforme.png');
     this.load.image('petite_plateforme', 'assets/petite_plateforme.png');
+    this.load.image('reacteur', 'assets/reacteur.png');
+    this.load.image('petit_reacteur', 'assets/petit_reacteur.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -159,6 +163,11 @@ function create ()
         setXY: {x: 1000, y: 780}
     });
     
+    reacteur = this.physics.add.group({
+        key : 'reacteur',
+        repeat : 0,
+        setXY: {x: 300, y: 2850}
+    });
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -168,6 +177,7 @@ function create ()
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(alien, platforms);
     this.physics.add.collider(heal, platforms);
+    this.physics.add.collider(reacteur, platforms);
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
     
@@ -176,6 +186,8 @@ function create ()
     this.physics.add.collider(player, bombs, hitBomb, null, this);
     
     this.physics.add.overlap(player, alien, hitAlien, null, this);
+    
+    this.physics.add.overlap(player, reacteur, collectReacteur, null, this);
     
 
     this.cameras.main.setBounds(0, 0, 5760, 3283)
@@ -307,6 +319,12 @@ function collectStar (player, star)
         bomb.allowGravity = false;
 
     }
+}
+
+function collectReacteur(player, reacteur){
+    reacteur.disableBody(true, true);
+    
+    this.add.image(60, 50, 'petit_reacteur').setScrollFactor(0);
 }
     
 function collectHeal (player, heal)
