@@ -56,7 +56,7 @@ function preload ()
     this.load.image('sky', 'assets/fondespace_test.png');
     this.load.image('ground', 'assets/bon_sol.png');
     this.load.image('star', 'assets/babou.png');
-    this.load.image('bomb', 'assets/pepe.png');
+    this.load.image('bomb', 'assets/meteore.png');
     this.load.image('alien', 'assets/alien.png');
     this.load.image('laser', 'assets/laser.png');
     this.load.image('bouffe', 'assets/bouffe.png');
@@ -344,7 +344,10 @@ function collectHeal (player, heal)
 
 function hitBomb (player, bombs)
 {
+    this.add.image(960, 540, 'game_over').setScrollFactor(0);
+    
     this.physics.pause();
+    
     player.setTint(0xff0000);
 
     player.anims.play('turn');
