@@ -62,6 +62,8 @@ function preload ()
     this.load.image('grande_plateforme', 'assets/grande_plateforme.png');
     this.load.image('moyenne_plateforme', 'assets/moyenne_plateforme.png');
     this.load.image('plateforme_normale', 'assets/plateforme_normale.png');
+    this.load.image('toute_petite_plateforme', 'assets/toute_petite_plateforme.png');
+    this.load.image('petite_plateforme', 'assets/petite_plateforme.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -84,6 +86,8 @@ function create ()
     platforms.create(1100, 1500, 'grande_plateforme');
     platforms.create(5000, 1800, 'moyenne_plateforme');
     platforms.create(3800, 700, 'plateforme_normale');
+    platforms.create(320, 200, 'toute_petite_plateforme');
+    platforms.create(1200, 2500, 'petite_plateforme');
     //  Now let's create some ledges
     
     //platforms.create(1200, 400, 'ground');
@@ -91,7 +95,7 @@ function create ()
     //platforms.create(1750, 220, 'ground');
 
     // The player and its settings ((100,450, 'dude') = position dans le jeu)
-    player = this.physics.add.sprite(100, 825, 'dude');
+    player = this.physics.add.sprite(100, 1240, 'dude');
 
     //  Player physics properties. Give the little guy a slight bounce and a hitbox.
     player.setBounce(0);
@@ -141,10 +145,13 @@ function create ()
     alien = this.physics.add.group({
         key : 'alien',
         repeat: 0,
-        setXY: { x: 540, y: 835, stepX: 500 },
+        setXY: { x: 540, y: 1240, stepX: 500 },
     });
     
-    var alien1 = alien.create(1200, 350, 'alien');
+    var alien1 = alien.create(1500, 1240, 'alien');
+    var alien2 = alien.create(1200, 3000, 'alien');
+    var alien3 = alien.create(5000, 3000, 'alien');
+    var alien4 = alien.create(350, 50, 'alien');
     
     heal = this.physics.add.group({
         key : 'bouffe',
