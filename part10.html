@@ -152,10 +152,14 @@ function create ()
         setXY: { x: 540, y: 1240, stepX: 500 },
     });
     
-    var alien1 = alien.create(1500, 1240, 'alien');
-    var alien2 = alien.create(1200, 3000, 'alien');
-    var alien3 = alien.create(5000, 3000, 'alien');
-    var alien4 = alien.create(350, 50, 'alien');
+    var alien1 = alien.create(1400, 1240, 'alien');
+    var alien2 = alien.create(2000, 1240, 'alien');
+    var alien3 = alien.create(1200, 3000, 'alien');
+    var alien4 = alien.create(5000, 3000, 'alien');
+    var alien5 = alien.create(350, 50, 'alien');
+    var alien6 = alien.create(3000, 3000, 'alien');
+    var alien7 = alien.create(5000, 1000, 'alien');
+    var alien8 = alien.create(4500, 200, 'alien');
     
     heal = this.physics.add.group({
         key : 'bouffe',
@@ -189,7 +193,6 @@ function create ()
     
     this.physics.add.overlap(player, reacteur, collectReacteur, null, this);
     
-
     this.cameras.main.setBounds(0, 0, 5760, 3283)
     this.cameras.main.setSize(1920, 1080);
     this.cameras.main.startFollow(player);
