@@ -50,7 +50,9 @@ var avant_vaisseau;
 var milieu_vaisseau;
 var queue_vaisseau;
 var panneau;
-var bouton_feu;
+var groupeBullets;
+var boutonFeu;
+
 //var vaisseau_complet;
 /*var piece1 = false;
 var piece2 = false;
@@ -115,12 +117,14 @@ function create ()
 
     // The player and its settings ((100,450, 'dude') = position dans le jeu)
     player = this.physics.add.sprite(3000, 3030, 'dude');
-
+    player.direction = 'right';
     //  Player physics properties. Give the little guy a slight bounce and a hitbox.
     player.setBounce(0);
     player.setCollideWorldBounds(true);
     player.setSize(90,90);
 
+    groupeBullets = this.physics.add.group();
+    
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
@@ -142,11 +146,11 @@ function create ()
         repeat: -1
     });
     
-    boutonFeu = this.input.keyboard.addKey('A');
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
-
+    boutonFeu = this.input.keyboard.addKey('A');
+    
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
         key: 'star',
@@ -246,6 +250,8 @@ function create ()
     
     this.physics.add.overlap(player, queue_vaisseau, collectQueueVaisseau, null, this);
     
+    this.physics.add.overlap(groupeBullets, alien, hit, null,this);
+    
     
     
     this.cameras.main.setBounds(0, 0, 5760, 3283)
@@ -291,12 +297,16 @@ function update ()
 
     if (cursors.left.isDown)
     {
+        player.direction = 'left';
+        
         player.setVelocityX(-750);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
+        player.direction = 'right';
+        
         player.setVelocityX(750);
 
         player.anims.play('right', true);
@@ -320,6 +330,9 @@ function update ()
             player.setVelocityY(-750);
             }
         }
+    if ( Phaser.Input.Keyboard.JustDown(boutonFeu)) {
+        tirer(player);
+    }
     
     if (cursors.up.isUp)
         {
@@ -346,16 +359,24 @@ function update ()
     else if (vie == 0){
         this.add.image(960, 540, 'game_over').setScrollFactor(0);
     }
-    
-    function tirer(player) {
-	   alert ("joueur en position"+player.x + ","+player.y + " ; direction du tir : "+ player.direction) ; 
-    }
- 
-    if ( Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-        tirer(player, direction);
-    }
-    
 }
+    
+function tirer(player) {
+	    var coefDir;
+        if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
+        // on crée la balle a coté du joueur
+        var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'laser');
+        // parametres physiques de la balle.
+        bullet.setCollideWorldBounds(true);
+        bullet.body.allowGravity =false;
+        bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+}
+ 
+function hit (bullet, alien) {
+    bullet.destroy();
+    alien.destroy();    
+}
+
 
 function collectStar (player, star)
 {
