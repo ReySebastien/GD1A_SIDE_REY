@@ -52,6 +52,7 @@ var queue_vaisseau;
 var panneau;
 var groupeBullets;
 var boutonFeu;
+var image;
 
 //var vaisseau_complet;
 /*var piece1 = false;
@@ -85,6 +86,7 @@ function preload ()
     this.load.image('queue_vaisseau', 'assets/queue_vaisseau.png');
     this.load.image('petite_queue_vaisseau', 'assets/petite_queue_vaisseau.png');
     this.load.image('vaisseau_complet', 'assets/vaisseau_complet.png');
+    this.load.image('panneau_explication', 'assets/panneau_explication.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -251,6 +253,8 @@ function create ()
     this.physics.add.overlap(player, queue_vaisseau, collectQueueVaisseau, null, this);
     
     this.physics.add.overlap(groupeBullets, alien, hit, null,this);
+    
+    this.physics.add.overlap(player, panneau, affichePanneau, null, this);
     
     
     
@@ -441,7 +445,12 @@ function collectQueueVaisseau(player, queue_vaisseau){
     
 function affichePanneau(player, panneau){
     
-    this.add.image(960, 540, 'affiche_panneau')
+    image = panneau.body.touching.none = this.add.image(960, 540, 'panneau_explication').setScrollFactor(0);
+    
+    this.input.once('pointerdown',function(){
+        image.destroy();   
+    });
+    
 }
 
 /*function ajoutVaisseauComplet(player, vaisseau_complet){
