@@ -52,7 +52,7 @@ var queue_vaisseau;
 var panneau;
 var groupeBullets;
 var boutonFeu;
-var image;
+var explication;
 
 //var vaisseau_complet;
 /*var piece1 = false;
@@ -87,6 +87,7 @@ function preload ()
     this.load.image('petite_queue_vaisseau', 'assets/petite_queue_vaisseau.png');
     this.load.image('vaisseau_complet', 'assets/vaisseau_complet.png');
     this.load.image('panneau_explication', 'assets/panneau_explication.png');
+    this.load.image('gitan', 'assets/gitan.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
     this.load.image('barre_de_vie_1hp', 'assets/barre_de_vie_1hp.png');
@@ -130,9 +131,8 @@ function create ()
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
         frameRate: 10,
-        repeat: -1
     });
 
     this.anims.create({
@@ -145,13 +145,12 @@ function create ()
         key: 'right',
         frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
         frameRate: 10,
-        repeat: -1
     });
     
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
-    boutonFeu = this.input.keyboard.addKey('A');
+    boutonFeu = this.input.keyboard.addKey('space');
     
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -444,14 +443,12 @@ function collectQueueVaisseau(player, queue_vaisseau){
 }
     
 function affichePanneau(player, panneau){
-    
-    image = panneau.body.touching.none = this.add.image(960, 540, 'panneau_explication').setScrollFactor(0);
-    
-    this.input.once('pointerdown',function(){
-        image.destroy();   
-    });
-    
+
+    explication = this.add.image(960, 540, 'panneau_explication').setScrollFactor(0);
+    explication.setSize(1920,1080);
+    explication.onclick(explication.destroy());
 }
+    
 
 /*function ajoutVaisseauComplet(player, vaisseau_complet){
     if(piece1 = true && piece2 = true && piece3 = true && piece4 == true){
