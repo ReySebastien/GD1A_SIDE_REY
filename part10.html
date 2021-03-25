@@ -48,7 +48,12 @@ var heal;
 var reacteur;
 var avant_vaisseau;
 var milieu_vaisseau;
-var queue_vaisseau;    
+var queue_vaisseau;
+var vaisseau_complet;
+var piece1 = false;
+var piece2 = false;
+var piece3 = false;
+var piece4 = false;
 var vie = 3;
 var invulnerabilite = false;
 
@@ -364,24 +369,39 @@ function collectReacteur(player, reacteur){
     reacteur.disableBody(true, true);
     
     this.add.image(100, 100, 'petit_reacteur').setScrollFactor(0);
+    
+    piece1 == true;
+    
 }
     
 function collectAvantVaisseau(player, avant_vaisseau){
     avant_vaisseau.disableBody(true, true);
     
     this.add.image(600, 50, 'avant_vaisseau').setScrollFactor(0);
+    
+    piece2 == true;
 }
  
 function collectMilieuVaisseau(player, milieu_vaisseau){
     milieu_vaisseau.disableBody(true, true);
     
     this.add.image(400, 100, 'milieu_vaisseau').setScrollFactor(0);
+    
+    piece3 == true;
 }
 
 function collectQueueVaisseau(player, queue_vaisseau){
     queue_vaisseau.disableBody(true, true);
     
     this.add.image(200, 75, 'petite_queue_vaisseau').setScrollFactor(0);
+    
+    piece4 == true;
+}
+
+function ajoutVaisseauComplet(player, vaisseau_complet){
+    if(piece1 = true && piece2 = true && piece3 = true && piece4 == true){
+        this.add.image (2500; 2900, 'vaisseau_complet');
+    }
 }
     
 function collectHeal (player, heal)
