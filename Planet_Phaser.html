@@ -503,6 +503,7 @@ function update ()
 
         else if (paddle.R2 && !player.body.touching.down)
         {
+            player.direction = 'right';
             player.setVelocityX(750);
             player.anims.play('right', true);
         }
@@ -516,6 +517,7 @@ function update ()
 
         else if (paddle.L2 && !player.body.touching.down)
         {
+            player.direction =  'left';
             player.setVelocityX(-750);
             player.anims.play('left', true);
         }
