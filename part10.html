@@ -193,7 +193,7 @@ function create ()
     var alien5 = alien.create(350, 50, 'alien');
     //var alien6 = alien.create(3000, 3000, 'alien');
     var alien7 = alien.create(5000, 1000, 'alien');
-    var alien8 = alien.create(4500, 200, 'alien');
+    var alien8 = alien.create(4200, 200, 'alien');
     
     heal = this.physics.add.group({
         key : 'bouffe',
@@ -297,11 +297,36 @@ function create ()
     
     hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
     
+    //ALIENS QUI BOUGENT :
+    
     var tween = this.tweens.add({
-        targets: alien,
-        x: 600,
-        //ease: 'Power1',
-        duration: 3000,
+        targets: alien1,
+        x: 50,
+        duration: 5000,
+        yoyo: true,
+        repeat: -1,
+        onStart: function () { console.log('onStart'); console.log(arguments); },
+        onComplete: function () { console.log('onComplete'); console.log(arguments); },
+        onYoyo: function () { console.log('onYoyo'); console.log(arguments); },
+        onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
+    });
+    
+    var tween1 = this.tweens.add({
+        targets: alien2,
+        x: 50,
+        duration: 5000,
+        yoyo: true,
+        repeat: -1,
+        onStart: function () { console.log('onStart'); console.log(arguments); },
+        onComplete: function () { console.log('onComplete'); console.log(arguments); },
+        onYoyo: function () { console.log('onYoyo'); console.log(arguments); },
+        onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
+    });
+    
+    var tween2 = this.tweens.add({
+        targets: alien3,
+        x: 50,
+        duration: 5000,
         yoyo: true,
         repeat: -1,
         onStart: function () { console.log('onStart'); console.log(arguments); },
