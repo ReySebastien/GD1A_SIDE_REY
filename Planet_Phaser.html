@@ -32,7 +32,7 @@ var config = {
         update: update
     }
 };
-    
+   // VARIABLES -------------------------------------------------- 
 var paddle;
 var paddleConnected=false;
 var player;
@@ -70,9 +70,10 @@ var piece3 = false;
 var piece4 = false;
 var vie = 3;
 var invulnerabilite = false;
-
 var game = new Phaser.Game(config);
 
+    // FONCTION DE CHARGEMENT D'ASSETS --------------------------------------------------
+    
 function preload ()
 {
     this.load.image('sky', 'assets/fondespace_test.png');
@@ -107,16 +108,17 @@ function preload ()
     this.iter = 3.14;
 }
 
+    // FONCTION DE CREATION D'OBJETS --------------------------------------------------
 function create ()
 {
-    //  A simple background for our game
+    // AJOUT DU FOND --------------------------------------------------
+    
     this.add.image(2880, 1641, 'sky');
     
-    //  The platforms group contains the ground and the 2 ledges we can jump on
+    // CREATION PLATEFORMES --------------------------------------------------
+    
     platforms = this.physics.add.staticGroup();
 
-    //  Here we create the ground.
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     platforms.create(2880, 3122, 'ground').setScale(1).refreshBody();
     platforms.create(1100, 1500, 'grande_plateforme');
     platforms.create(5000, 1800, 'moyenne_plateforme');
@@ -126,22 +128,14 @@ function create ()
     platforms.create(0, 1641, 'bord_map');
     platforms.create(5760, 1641, 'bord_map');
     
-    //  Now let's create some ledges
-    
-    //platforms.create(1200, 400, 'ground');
-    //platforms.create(50, 250, 'ground');
-    //platforms.create(1750, 220, 'ground');
 
-    // The player and its settings ((100,450, 'dude') = position dans le jeu)
+    // CREATION JOUEUR ET SES ANIMATIONS --------------------------------------------------
+    
     player = this.physics.add.sprite(3000, 3030, 'dude');
     player.direction = 'right';
-    //  Player physics properties. Give the little guy a slight bounce and a hitbox.
     player.setBounce(0);
     player.setCollideWorldBounds(true);
-
-    groupeBullets = this.physics.add.group();
     
-    //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 2 }),
@@ -170,15 +164,20 @@ function create ()
         frames: [{key: 'dude', frame: 3}],
     });
     
-
-    //  Input Events
+    // AJOUTS VARIABLE SELON TOUCHE --------------------------------------------------
+    
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('space');
     enlever_panneau = this.input.keyboard.addKey('esc');
     enlever_panneau2 = this.input.keyboard.addKey('shift');
-    //boutonFeuManette = this.input.gamepad.pad('B');
+    
+    // CREATION GROUPES SELON TYPE D'ASSETS --------------------------------------------------
+    
+    groupeBullets = this.physics.add.group();
 
     bombs = this.physics.add.group();
+    
+    // ALIEN --------------------------------------------------
     
     alien = this.physics.add.group({
         key : 'alien',
@@ -191,9 +190,10 @@ function create ()
     var alien3 = alien.create(1200, 3000, 'alien');
     var alien4 = alien.create(5000, 3000, 'alien');
     var alien5 = alien.create(350, 50, 'alien');
-    //var alien6 = alien.create(3000, 3000, 'alien');
     var alien7 = alien.create(5000, 1000, 'alien');
     var alien8 = alien.create(4200, 200, 'alien');
+    
+    // SOIN --------------------------------------------------
     
     heal = this.physics.add.group({
         key : 'bouffe',
@@ -201,11 +201,17 @@ function create ()
         setXY: {x: 1000, y: 780}
     });
     
+    hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
+    
+    // ARME PLAYER --------------------------------------------------
+    
     pistolet_laser = this.physics.add.group({
         key : 'pistolet_laser',
         repeat : 0,
         setXY: {x:1300, y: 2325}
     });
+    
+    // PIECES VAISSEAU --------------------------------------------------
     
     reacteur = this.physics.add.group({
         key : 'reacteur',
@@ -231,6 +237,10 @@ function create ()
         setXY: {x: 5600, y: 2900}
     });
     
+    vaisseau = this.physics.add.sprite( 2500 ,2700, 'vaisseau_complet');
+    
+    // PANEAUX --------------------------------------------------
+    
     panneau = this.physics.add.group({
         key : 'panneau',
         repeat : 0,
@@ -243,8 +253,6 @@ function create ()
         setXY: {x: 1500, y: 2325,}
     });
     
-    vaisseau = this.physics.add.sprite( 2500 ,2700, 'vaisseau_complet');
-    
     panneau_explication = this.physics.add.sprite(960, 540, 'panneau_explication').setScrollFactor(0,0);
     panneau_explication.body.setAllowGravity(false);
     
@@ -252,7 +260,7 @@ function create ()
     panneau_explication2.body.setAllowGravity(false);
     
 
-    //  Collide the player and the stars with the platforms
+    //  COLLIDERS ET OVERLAPS --------------------------------------------------
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(alien, platforms);
@@ -263,42 +271,34 @@ function create ()
     this.physics.add.collider(queue_vaisseau, platforms);
     this.physics.add.collider(panneau, platforms);
     this.physics.add.collider(pistolet_laser, platforms);
-    this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
     this.physics.add.collider(panneau2, platforms);
     this.physics.add.collider(groupeBullets, bombs, hitAsteroide, null, this);
     this.physics.add.collider(vaisseau, platforms);
-    
-    this.physics.add.overlap(player, heal, collectHeal, null, this);
-    
     this.physics.add.collider(player, bombs, hitBomb, null, this);
     
+    this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
+    this.physics.add.overlap(player, heal, collectHeal, null, this);
     this.physics.add.overlap(player, alien, hitAlien, null, this);
-    
     this.physics.add.overlap(player, reacteur, collectReacteur, null, this);
-    
     this.physics.add.overlap(player, avant_vaisseau, collectAvantVaisseau, null, this);
-    
     this.physics.add.overlap(player, milieu_vaisseau, collectMilieuVaisseau, null, this);
-    
     this.physics.add.overlap(player, queue_vaisseau, collectQueueVaisseau, null, this);
-    
     this.physics.add.overlap(groupeBullets, alien, hit, null,this);
-    
     this.physics.add.overlap(player, panneau, affichePanneau, null, this);
-    
     this.physics.add.overlap(player, panneau2, affichePanneau2, null, this);
-    
     this.physics.add.overlap(player, pistolet_laser, getPistolet, null, this);
-    
     this.physics.add.overlap(player, vaisseau, victoireJoueur, null, this);
+    
+    // CAMERA --------------------------------------------------
     
     this.cameras.main.setBounds(0, 0, 5760, 3283)
     this.cameras.main.setSize(1920, 1080);
     this.cameras.main.startFollow(player);
+
+        
+
     
-    hp = this.add.image(1800,100, "barre_de_vie_3hp").setScrollFactor(0);
-    
-    //ALIENS QUI BOUGENT :
+    //ALIENS QUI BOUGENT --------------------------------------------------
     
     var tween = this.tweens.add({
         targets: alien1,
@@ -336,6 +336,7 @@ function create ()
         onRepeat: function () { console.log('onRepeat'); console.log(arguments); },
     });
     
+    // ANIMATIONS PANNEAUX --------------------------------------------------
     
     this.anims.create({
         key: 'panneau_apparait',
@@ -357,27 +358,24 @@ function create ()
         frames: [{ key: 'panneau_explication2', frame: 2.}],
     });
     
+    // ANIMATION VAISSEAU --------------------------------------------------
+    
     this.anims.create({
         key: 'vaisseau_apparait',
         frames: [{ key: 'vaisseau_complet', frame: 1.}],
     })
 }
-//  The callback is always sent a reference to the Tween as the first argument and the targets as the second,
-//  then whatever you provided in the onStartParams array as the rest
-/*function onYoyoHandler (tween, target)
-{
-    console.log(arguments);
 
-    target.toggleFlipX().setAlpha(0.2 + Math.random());
-}*/
-
-
+    // FONCTION UPDATE --------------------------------------------------
+    
 function update ()
 {
     if (gameOver)
     {
         return;
     }
+    
+    // AJOUT CONTROLES CLAVIER --------------------------------------------------
     
     if (player.body.touching.down){
         var doubleSaut = false;
@@ -425,17 +423,23 @@ function update ()
             }
         }
     
+    if (cursors.up.isUp)
+    {
+        frame = true
+    }
+    
+    if (cursors.down.isDown){
+        player.setVelocityY(750)
+    }
+    
+    // CONDITION DE RENVOI SUR LES FONCTIONS SELON LA TOUCHE APPUYEE --------------------------------------------------
     
     if ( Phaser.Input.Keyboard.JustDown(boutonFeu)) {
             if(pistolet == true){
             tirer(player);
             }
         }
-    /*if ( Phaser.Input.Gamepad.JustDown(boutonFeuManette)){
-            if(pistolet == true){
-            tirer(player);
-            }
-        }*/
+
     
     if ( Phaser.Input.Keyboard.JustDown(enlever_panneau)) {
             explication = false;
@@ -447,19 +451,8 @@ function update ()
             panneau_explication2.anims.play('panneau2_disparait');
     }
     
-    /*if (player.x < 3050 || player.x > 3150){
-            explication == false;
-    }*/
     
-    
-    if (cursors.up.isUp)
-        {
-            frame = true
-        }
-    
-    if (cursors.down.isDown){
-        player.setVelocityY(750)
-    }
+    // CONTROLE DE L'ACTUALISATION DE LA BARRE DE VIE --------------------------------------------------
     
     if (vie == 3){
        hp.setTexture("barre_de_vie_3hp");
@@ -478,13 +471,15 @@ function update ()
         this.add.image(960, 540, 'game_over').setScrollFactor(0);
     }
     
+    //
       if(piece1 == true && piece2 == true && piece3 == true && piece4 == true && vaisseau_complet == false){
             vaisseau_complet = true;
             vaisseau.anims.play('vaisseau_apparait');
     }
     
+    // AJOUT CONTROLES MANETTE --------------------------------------------------
+    
     this.input.gamepad.once('connected', function (pad) {
-    //   'pad' is a reference to the gamepad that was just connected
     paddleConnected = true;
     paddle = pad;
     });
@@ -542,12 +537,15 @@ function update ()
             }
     }
 }
+    // FONCTION RECUPERER LE PISTOLET QUI ACTIVE LE TIR --------------------------------------------------
 
 function getPistolet(player, pistolet_laser){
     pistolet_laser.disableBody(true, true);
     pistolet = true;
 }
 
+    // FONCTION POUR TIRER --------------------------------------------------
+    
 function tirer(player) {
 	    var coefDir;
         if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
@@ -558,21 +556,25 @@ function tirer(player) {
         bullet.body.allowGravity =false;
         bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
- 
+    // FONCTION DE DESTRUCTION DE L'ALIEN ET DE LA BALLE QUAND ILS SE TOUCHENT --------------------------------------------------
+    
 function hit (bullet, alien) {
     bullet.destroy();
     alien.destroy();    
 }
-
+    // FONCTION DE DESTRUCTION DE LA BALLE LORSQU'ELLE TOUCHE UNE PAROIE DE LA SURFACE DE JEU --------------------------------------------------
+    
 function hitWall(bullet, platforms){
     bullet.destroy();
 }
+    // FONCTION DE DESTRUCTION DE LA BALLE ET DE L'ASTEROIDE QUAND ILS SE TOUCHENT --------------------------------------------------
     
 function hitAsteroide(bullet, bombs){
     bullet.destroy();
     bombs.destroy();
 }
 
+    // FONCTIONS DE COLLECTE DES PIECES DE VAISSEAU --------------------------------------------------
 
 function collectReacteur(player, reacteur){
     reacteur.disableBody(true, true);
@@ -651,6 +653,8 @@ function collectQueueVaisseau(player, queue_vaisseau){
     }
 }
     
+    // FONCTION D'AFFICHAGE DES PANNEAUX LORSQUE LE JOUEUR PASSE DESSUS --------------------------------------------------
+    
 function affichePanneau(player, panneau){
     panneau_explication.anims.play('panneau_apparait');
     explication = true;
@@ -661,13 +665,12 @@ function affichePanneau2(player, panneau2){
     panneau_explication2.anims.play('panneau2_apparait');
     explication2 = true;
 }
+    // FONCTION DE COLLECTE DU SOIN --------------------------------------------------
     
 function collectHeal (player, heal)
 {
     heal.disableBody(true, true);
 
-    //  changement de la vie
-    
     vie += 1;
     
     if(vie >= 4)
@@ -677,6 +680,8 @@ function collectHeal (player, heal)
 
 }
 
+    // FONCTION DE LA CONDITION DE VICTOIRE --------------------------------------------------
+    
 function victoireJoueur(player, vaisseau){
     if(vaisseau_complet == true){
         
@@ -687,6 +692,7 @@ function victoireJoueur(player, vaisseau){
         player.disableBody(true, true);
     }   
 }
+    // FONCTION DE LA MORT DU PERSONNAGE LORSQUE QU'IL TOUCHE UN ASTEROIDE --------------------------------------------------
     
 function hitBomb (player, bombs)
 {
@@ -700,6 +706,8 @@ function hitBomb (player, bombs)
 
     gameOver = true;
 }
+    
+    // FONCTION DE PERTE DE VIE LORSQUE LE PERSONNAGE TOUCHE UN ALIEN JUSQU'A LA MORT --------------------------------------------------
     
 function hitAlien (player, alien)
 {
