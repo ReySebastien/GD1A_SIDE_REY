@@ -278,7 +278,7 @@ function create ()
     this.physics.add.collider(pistolet_laser, platforms);
     this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
     this.physics.add.collider(panneau2, platforms);
-    
+    this.physics.add.collider(groupeBullets, bombs, hitAsteroide, null, this);
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
     
@@ -303,7 +303,6 @@ function create ()
     this.physics.add.overlap(player, panneau2, affichePanneau2, null, this);
     
     this.physics.add.overlap(player, pistolet_laser, getPistolet, null, this);
-    
     
     
     this.cameras.main.setBounds(0, 0, 5760, 3283)
@@ -488,6 +487,11 @@ function hit (bullet, alien) {
 function hitWall(bullet, platforms){
     bullet.destroy();
 }
+    
+function hitAsteroide(bullet, bombs){
+    bullet.destroy();
+    bombs.destroy();
+}
 
 function collectStar (player, star)
 {
@@ -524,6 +528,17 @@ function collectReacteur(player, reacteur){
     
     piece1 = true;
     
+    if (piece1 == true){
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-1000, 1000), 100);
+        bomb.allowGravity = false;
+    }
+    
 }
     
 function collectAvantVaisseau(player, avant_vaisseau){
@@ -532,6 +547,17 @@ function collectAvantVaisseau(player, avant_vaisseau){
     this.add.image(600, 50, 'avant_vaisseau').setScrollFactor(0);
     
     piece2 = true;
+    
+    if (piece2 == true){
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-1000, 1000), 100);
+        bomb.allowGravity = false;
+    }
 }
  
 function collectMilieuVaisseau(player, milieu_vaisseau){
@@ -540,6 +566,17 @@ function collectMilieuVaisseau(player, milieu_vaisseau){
     this.add.image(400, 100, 'milieu_vaisseau').setScrollFactor(0);
     
     piece3 = true;
+    
+    if (piece3 == true){
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-1000, 1000), 100);
+        bomb.allowGravity = false;
+    }
 }
 
 function collectQueueVaisseau(player, queue_vaisseau){
@@ -548,6 +585,17 @@ function collectQueueVaisseau(player, queue_vaisseau){
     this.add.image(200, 75, 'petite_queue_vaisseau').setScrollFactor(0);
     
     piece4 = true;
+    
+    if (piece4 == true){
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-1000, 1000), 100);
+        bomb.allowGravity = false;
+    }
 }
     
 function affichePanneau(player, panneau){
