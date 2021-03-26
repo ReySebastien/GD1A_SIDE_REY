@@ -40,10 +40,8 @@ var bombs;
 var alien;
 var platforms;
 var cursors;
-var score = 0;
 var gameOver = false;
 var victoire = false;
-var scoreText;
 var doubleSaut = false;
 var frame = true;
 var heal;
@@ -252,9 +250,6 @@ function create ()
     
     panneau_explication2 = this.physics.add.sprite(960, 540, 'panneau_explication2').setScrollFactor(0,0);
     panneau_explication2.body.setAllowGravity(false);
-    
-    //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     
 
     //  Collide the player and the stars with the platforms
