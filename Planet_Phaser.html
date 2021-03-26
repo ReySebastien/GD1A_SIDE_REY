@@ -33,6 +33,7 @@ var config = {
     }
 };
    // VARIABLES -------------------------------------------------- 
+    
 var paddle;
 var paddleConnected=false;
 var player;
@@ -109,6 +110,7 @@ function preload ()
 }
 
     // FONCTION DE CREATION D'OBJETS --------------------------------------------------
+    
 function create ()
 {
     // AJOUT DU FOND --------------------------------------------------
@@ -261,6 +263,7 @@ function create ()
     
 
     //  COLLIDERS ET OVERLAPS --------------------------------------------------
+    
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(alien, platforms);
@@ -537,7 +540,7 @@ function update ()
             }
     }
 }
-    // FONCTION RECUPERER LE PISTOLET QUI ACTIVE LE TIR --------------------------------------------------
+    // FONCTION QUI RECUPERE LE PISTOLET ET QUI ACTIVE LE TIR --------------------------------------------------
 
 function getPistolet(player, pistolet_laser){
     pistolet_laser.disableBody(true, true);
