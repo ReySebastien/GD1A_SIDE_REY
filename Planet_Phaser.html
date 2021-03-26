@@ -42,7 +42,7 @@ var platforms;
 var cursors;
 var score = 0;
 var gameOver = false;
-//var victoire = false;
+var victoire = false;
 var scoreText;
 var doubleSaut = false;
 var frame = true;
@@ -65,6 +65,7 @@ var boutonFeuManette;
 var pistolet = false;
 var pistolet_laser;
 var vaisseau_complet = false;
+var vaisseau;
 var piece1 = false;
 var piece2 = false;
 var piece3 = false;
@@ -83,6 +84,7 @@ function preload ()
     this.load.image('laser', 'assets/laser.png');
     this.load.image('bouffe', 'assets/bouffe.png');
     this.load.image('game_over', 'assets/game_over.png');
+    this.load.image('victoire', 'assets/victoire.png');
     this.load.image('grande_plateforme', 'assets/grande_plateforme.png');
     this.load.image('moyenne_plateforme', 'assets/moyenne_plateforme.png');
     this.load.image('plateforme_normale', 'assets/plateforme_normale.png');
@@ -94,7 +96,7 @@ function preload ()
     this.load.image('milieu_vaisseau', 'assets/milieu_vaisseau.png');
     this.load.image('queue_vaisseau', 'assets/queue_vaisseau.png');
     this.load.image('petite_queue_vaisseau', 'assets/petite_queue_vaisseau.png');
-    this.load.image('vaisseau_complet', 'assets/vaisseau_complet.png');
+    this.load.spritesheet('vaisseau_complet', 'assets/vaisseau_complet.png', {frameWidth: 350, frameHeight: 588});
     this.load.spritesheet('panneau_explication', 'assets/panneau_explication.png', {frameWidth: 1920, frameHeight: 1080});
     this.load.spritesheet('panneau_explication2', 'assets/panneau_explication2.png', {frameWidth: 1920, frameHeight: 1080});
     this.load.image('bord_map', 'assets/bord_map.png');
@@ -243,6 +245,8 @@ function create ()
         setXY: {x: 1500, y: 2325,}
     });
     
+    vaisseau = this.physics.add.sprite( 2500 ,2700, 'vaisseau_complet');
+    
     panneau_explication = this.physics.add.sprite(960, 540, 'panneau_explication').setScrollFactor(0,0);
     panneau_explication.body.setAllowGravity(false);
     
@@ -267,6 +271,7 @@ function create ()
     this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
     this.physics.add.collider(panneau2, platforms);
     this.physics.add.collider(groupeBullets, bombs, hitAsteroide, null, this);
+    this.physics.add.collider(vaisseau, platforms);
     
     this.physics.add.overlap(player, heal, collectHeal, null, this);
     
@@ -290,6 +295,7 @@ function create ()
     
     this.physics.add.overlap(player, pistolet_laser, getPistolet, null, this);
     
+    this.physics.add.overlap(player, vaisseau, victoireJoueur, null, this);
     
     this.cameras.main.setBounds(0, 0, 5760, 3283)
     this.cameras.main.setSize(1920, 1080);
@@ -355,6 +361,11 @@ function create ()
         key: 'panneau2_disparait',
         frames: [{ key: 'panneau_explication2', frame: 2.}],
     });
+    
+    this.anims.create({
+        key: 'vaisseau_apparait',
+        frames: [{ key: 'vaisseau_complet', frame: 1.}],
+    })
 }
 //  The callback is always sent a reference to the Tween as the first argument and the targets as the second,
 //  then whatever you provided in the onStartParams array as the rest
@@ -473,8 +484,8 @@ function update ()
     }
     
       if(piece1 == true && piece2 == true && piece3 == true && piece4 == true && vaisseau_complet == false){
-          vaisseau_complet = true;
-          this.add.image(2500, 2500, 'vaisseau_complet');
+            vaisseau_complet = true;
+            vaisseau.anims.play('vaisseau_apparait');
     }
     
     this.input.gamepad.once('connected', function (pad) {
@@ -671,7 +682,17 @@ function collectHeal (player, heal)
 
 }
 
-
+function victoireJoueur(player, vaisseau){
+    if(vaisseau_complet == true){
+        
+        victoire = true
+        this.add.image(960, 540, 'victoire').setScrollFactor(0);
+        this.physics.pause();
+        player.setTint('#00FF1B');
+        player.disableBody(true, true);
+    }   
+}
+    
 function hitBomb (player, bombs)
 {
     this.add.image(960, 540, 'game_over').setScrollFactor(0);
