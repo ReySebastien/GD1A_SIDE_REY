@@ -90,7 +90,7 @@ function preload ()
     this.load.image('petite_queue_vaisseau', 'assets/petite_queue_vaisseau.png');
     this.load.image('vaisseau_complet', 'assets/vaisseau_complet.png');
     this.load.spritesheet('panneau_explication', 'assets/panneau_explication.png', {frameWidth: 1920, frameHeight: 1080});
-    this.load.image('gitan', 'assets/gitan.png');
+    this.load.image('bord_map', 'assets/bord_map.png');
     this.load.image('pistolet_laser', 'assets/pistolet_laser.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
     this.load.image('barre_de_vie_2hp', 'assets/barre_de_vie_2hp.png');
@@ -116,6 +116,9 @@ function create ()
     platforms.create(3800, 700, 'plateforme_normale');
     platforms.create(320, 200, 'toute_petite_plateforme');
     platforms.create(1200, 2500, 'petite_plateforme');
+    platforms.create(0, 1641, 'bord_map');
+    platforms.create(5760, 1641, 'bord_map');
+    
     //  Now let's create some ledges
     
     //platforms.create(1200, 400, 'ground');
@@ -258,6 +261,7 @@ function create ()
     this.physics.add.collider(queue_vaisseau, platforms);
     this.physics.add.collider(panneau, platforms);
     this.physics.add.collider(pistolet_laser, platforms);
+    this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
     
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
@@ -438,7 +442,7 @@ function tirer(player) {
         // on crée la balle a coté du joueur
         var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'laser');
         // parametres physiques de la balle.
-        bullet.setCollideWorldBounds(true);
+        bullet.setCollideWorldBounds(false);
         bullet.body.allowGravity =false;
         bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
@@ -448,6 +452,9 @@ function hit (bullet, alien) {
     alien.destroy();    
 }
 
+function hitWall(bullet, platforms){
+    bullet.destroy();
+}
 
 function collectStar (player, star)
 {
