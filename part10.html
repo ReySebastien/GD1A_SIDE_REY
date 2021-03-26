@@ -51,8 +51,11 @@ var milieu_vaisseau;
 var queue_vaisseau;
 var panneau;
 var panneau_explication;
+var panneau_explication2;
 var explication = false;
+var explication2 = false;
 var enlever_panneau;
+var enlever_panneau2;
 var groupeBullets;
 var boutonFeu;
 var pistolet = false;
@@ -90,6 +93,7 @@ function preload ()
     this.load.image('petite_queue_vaisseau', 'assets/petite_queue_vaisseau.png');
     this.load.image('vaisseau_complet', 'assets/vaisseau_complet.png');
     this.load.spritesheet('panneau_explication', 'assets/panneau_explication.png', {frameWidth: 1920, frameHeight: 1080});
+    this.load.spritesheet('panneau_explication2', 'assets/panneau_explication2.png', {frameWidth: 1920, frameHeight: 1080});
     this.load.image('bord_map', 'assets/bord_map.png');
     this.load.image('pistolet_laser', 'assets/pistolet_laser.png');
     this.load.image('barre_de_vie_3hp', 'assets/barre_de_vie_3hp.png');
@@ -168,6 +172,7 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('space');
     enlever_panneau = this.input.keyboard.addKey('esc');
+    enlever_panneau2 = this.input.keyboard.addKey('shift');
     
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -209,7 +214,7 @@ function create ()
     pistolet_laser = this.physics.add.group({
         key : 'pistolet_laser',
         repeat : 0,
-        setXY: {x:2800, y: 3000}
+        setXY: {x:1300, y: 2325}
     });
     
     reacteur = this.physics.add.group({
@@ -242,8 +247,13 @@ function create ()
         setXY: {x: 3100, y: 3040}
     });
     
+    var panneau2 = panneau.create(1500, 2325, 'panneau');
+    
     panneau_explication = this.physics.add.sprite(960, 540, 'panneau_explication').setScrollFactor(0,0);
     panneau_explication.body.setAllowGravity(false);
+    
+    panneau_explication2 = this.physics.add.sprite(960, 540, 'panneau_explication2').setScrollFactor(0,0);
+    panneau_explication2.body.setAllowGravity(false);
     
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -284,6 +294,8 @@ function create ()
     
     this.physics.add.overlap(player, panneau, affichePanneau, null, this);
     
+    this.physics.add.overlap(player, panneau2, affichePanneau2, null, this);
+    
     this.physics.add.overlap(player, pistolet_laser, getPistolet, null, this);
     
     
@@ -316,6 +328,16 @@ function create ()
     this.anims.create({
         key: 'panneau_disparait',
         frames: [{ key: 'panneau_explication', frame: 2.}],
+    });
+    
+    this.anims.create({
+        key: 'panneau2_apparait',
+        frames: [{ key: 'panneau_explication2', frame: 1.}],
+    });
+    
+    this.anims.create({
+        key: 'panneau2_disparait',
+        frames: [{ key: 'panneau_explication2', frame: 2.}],
     });
 }
 //  The callback is always sent a reference to the Tween as the first argument and the targets as the second,
@@ -392,6 +414,11 @@ function update ()
             explication = false;
             panneau_explication.anims.play('panneau_disparait');  
         }
+    
+    if ( Phaser.Input.Keyboard.JustDown(enlever_panneau2)){
+            explication2 = false;
+            panneau_explication2.anims.play('panneau2_disparait');
+    }
     
     /*if (player.x < 3050 || player.x > 3150){
             explication == false;
@@ -522,7 +549,11 @@ function affichePanneau(player, panneau){
     explication = true;
     
 }
-    
+
+function affichePanneau2(player, panneau2){
+    panneau_explication2.anims.play('panneau2_apparait');
+    explication2 = true;
+}
     
 function collectHeal (player, heal)
 {
