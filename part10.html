@@ -25,15 +25,17 @@ var config = {
             debug: true
         }
     },
+    input:{gamepad:true},
     scene: {
         preload: preload,
         create: create,
         update: update
     }
 };
-
+    
+var paddle;
+var paddleConnected=false;
 var player;
-var stars;
 var bombs;
 var alien;
 var platforms;
@@ -59,6 +61,7 @@ var enlever_panneau;
 var enlever_panneau2;
 var groupeBullets;
 var boutonFeu;
+var boutonFeuManette;
 var pistolet = false;
 var pistolet_laser;
 var vaisseau_complet = false;
@@ -75,7 +78,6 @@ function preload ()
 {
     this.load.image('sky', 'assets/fondespace_test.png');
     this.load.image('ground', 'assets/bon_sol.png');
-    this.load.image('star', 'assets/babou.png');
     this.load.image('bomb', 'assets/meteore.png');
     this.load.image('alien', 'assets/alien.png');
     this.load.image('laser', 'assets/laser.png');
@@ -174,20 +176,7 @@ function create ()
     boutonFeu = this.input.keyboard.addKey('space');
     enlever_panneau = this.input.keyboard.addKey('esc');
     enlever_panneau2 = this.input.keyboard.addKey('shift');
-    
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    stars.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
+    //boutonFeuManette = this.input.gamepad.pad('B');
 
     bombs = this.physics.add.group();
     
@@ -266,7 +255,6 @@ function create ()
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(alien, platforms);
     this.physics.add.collider(heal, platforms);
@@ -279,8 +267,6 @@ function create ()
     this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
     this.physics.add.collider(panneau2, platforms);
     this.physics.add.collider(groupeBullets, bombs, hitAsteroide, null, this);
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
     
     this.physics.add.overlap(player, heal, collectHeal, null, this);
     
@@ -414,6 +400,11 @@ function update ()
             tirer(player);
             }
         }
+    /*if ( Phaser.Input.Gamepad.JustDown(boutonFeuManette)){
+            if(pistolet == true){
+            tirer(player);
+            }
+        }*/
     
     if ( Phaser.Input.Keyboard.JustDown(enlever_panneau)) {
             explication = false;
@@ -461,6 +452,64 @@ function update ()
           this.add.image(2500, 2500, 'vaisseau_complet');
     }
     
+    this.input.gamepad.once('connected', function (pad) {
+    //   'pad' is a reference to the gamepad that was just connected
+    paddleConnected = true;
+    paddle = pad;
+    });
+
+    if (paddleConnected == true)
+    {
+        if (paddle.A && player.body.touching.down)
+        {
+        player.setVelocityY(-750);
+        }
+
+        else if (paddle.R2 && player.body.touching.down)
+        {
+            player.direction = 'right';
+            player.setVelocityX(750);
+            player.anims.play('right', true);
+        }
+
+        else if (paddle.R2 && !player.body.touching.down)
+        {
+            player.setVelocityX(750);
+            player.anims.play('right', true);
+        }
+
+        else if (paddle.L2 && player.body.touching.down)
+        {   
+            player.direction = 'left';
+            player.setVelocityX(-750);
+            player.anims.play('left', true);
+        }
+
+        else if (paddle.L2 && !player.body.touching.down)
+        {
+            player.setVelocityX(-750);
+            player.anims.play('left', true);
+        }
+        
+        else if (paddle.L1 && !player.body.touching.down)
+            {
+                player.setVelocityY(750);
+            }
+        if (paddle.B){
+            if(pistolet == true){
+            tirer(player);
+            }
+        }
+        if (paddle.Y){
+            explication = false;
+            panneau_explication.anims.play('panneau_disparait');  
+            }
+    
+        if ( paddle.X){
+            explication2 = false;
+            panneau_explication2.anims.play('panneau2_disparait');
+            }
+    }
 }
 
 function getPistolet(player, pistolet_laser){
@@ -493,33 +542,6 @@ function hitAsteroide(bullet, bombs){
     bombs.destroy();
 }
 
-function collectStar (player, star)
-{
-    star.disableBody(true, true);
-
-    //  Add and update the score
-    score += 10;
-    scoreText.setText('Score: ' + score);
-
-    if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-
-            child.enableBody(true, child.x, 0, true, true);
-
-        });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-1000, 1000), 100);
-        bomb.allowGravity = false;
-
-    }
-}
 
 function collectReacteur(player, reacteur){
     reacteur.disableBody(true, true);
