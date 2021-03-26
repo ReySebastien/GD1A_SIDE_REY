@@ -50,6 +50,7 @@ var avant_vaisseau;
 var milieu_vaisseau;
 var queue_vaisseau;
 var panneau;
+var panneau2;
 var panneau_explication;
 var panneau_explication2;
 var explication = false;
@@ -247,7 +248,11 @@ function create ()
         setXY: {x: 3100, y: 3040}
     });
     
-    var panneau2 = panneau.create(1500, 2325, 'panneau');
+    panneau2 = this.physics.add.group({
+        key : 'panneau',
+        repeat : 0,
+        setXY: {x: 1500, y: 2325,}
+    });
     
     panneau_explication = this.physics.add.sprite(960, 540, 'panneau_explication').setScrollFactor(0,0);
     panneau_explication.body.setAllowGravity(false);
@@ -272,6 +277,7 @@ function create ()
     this.physics.add.collider(panneau, platforms);
     this.physics.add.collider(pistolet_laser, platforms);
     this.physics.add.overlap(groupeBullets, platforms, hitWall, null, this);
+    this.physics.add.collider(panneau2, platforms);
     
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
